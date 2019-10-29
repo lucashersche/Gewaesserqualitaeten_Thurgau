@@ -30,6 +30,19 @@ body {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
+  
+}
+
+h1{
+    padding-top: 50px;
+    text-align: center;
+    
+}
+
+p{
+    overflow: hidden;
+    overflow-wrap: break-word;
+    text-align: center;
 }
 
 header {
