@@ -33,16 +33,7 @@ body {
 }
 
 header {
-  display: flex;
-  font-size: 24px;
-  position: fixed;
-  width: 100%;
-  height: 70px;
-  background: #212121;
-  color: #fff;
-  justify-content: center;
-  align-items: center;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  
 }
 
 nav {
