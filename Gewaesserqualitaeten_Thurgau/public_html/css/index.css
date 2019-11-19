@@ -6,11 +6,9 @@
 
 * {
     margin: 0;
+    outline: none;
 }
 
-* {
-  outline: none;
-}
 
 .content{
     margin-left: auto;
@@ -19,10 +17,6 @@
     
 }
 
-
-body {
-
-}
 
 .container {
   width: 100%;
@@ -36,6 +30,9 @@ body {
 h1{
     padding-top: 50px;
     text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-style: italic;
+    Font-Size: 46px;
     
 }
 
@@ -43,6 +40,12 @@ p{
     overflow: hidden;
     overflow-wrap: break-word;
     text-align: center;
+}
+
+h3 {
+    font-family: 'Catamaran', sans-serif;
+    text-align: center;
+    Font-Size: 16px;
 }
 
 header {
@@ -59,4 +62,44 @@ main {
 
 footer {
 
+}
+
+#map { 
+            width: 100%;
+            z-index: -1;
+            position: absolute;
+            border-radius: 10px;
+            top: 0; bottom: 0; right: 0; left: 0;
+
+}
+
+.box1 {
+    width: 40%;
+    height: 250px;
+    background-color: white;
+    position: absolute;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-left: 1%;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+
+.box2 {
+    width: 40%;
+    height: 700px;
+    background-color: white;
+    position: fixed;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-left: 1%;
+    margin-top: 270px;
+    border-radius: 10px;
+    opacity: 80%;
+}
+
+.backgroundbox {
+    background-color: gray;
+    opacity: 10%;
+    position: absolute;
+    width: 42%;
+    height: 100%;
 }

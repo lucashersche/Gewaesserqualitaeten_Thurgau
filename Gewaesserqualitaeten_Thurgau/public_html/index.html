@@ -12,28 +12,64 @@ and open the template in the editor.
         <meta name="description" content="Gewässerqualitäten Thurgau">
         <!-- titel -->
         <title>Gewässerqualitäten Thurgau</title>
-        <!-- llinks -->
+        <!-- links -->
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/> 
+        <!-- Links -->
+        <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Catamaran&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Lato:400i&display=swap" rel="stylesheet">
+
     </head>
     <body>
-        <div class="container">
-            <h1>Gewässerqualitäten Thurgau</h1>
-            <br>
-            <hr>
-            <br>
-            <p>
-                Hier kann text angezeigt werden
-            </p>
-            
-            <!-- Hier muss eine Buttongroup mit den verschiedenen Monaten erstellt werden.-->
-            
-            <!-- Die Karte muss hier hinzugefügt werden.-->
-            
-            <!-- Hier kommt das rechstliche der Website nach der Karte.-->
-            
+
+            <div class="backgroundbox"></div>
+        <div class="box1" id="box1">
+            <h1 id="box1h1"></h1>
+            <h3 id="box1h3"></h3>
         </div>
+        <div class="box2" id="box2">
+
+            </div>
+        <div id ="map"></div>
+
+
+
+
+
+        <!-- Hier muss eine Buttongroup mit den verschiedenen Monaten erstellt werden.-->
+
+        <!-- Die Karte muss hier hinzugefügt werden.-->
+
+        <!-- Hier kommt das rechstliche der Website nach der Karte.-->
+
+        <script>
+            var map = L.map('map').setView([47.553698, 8.898659], 9);
+            L.tileLayer('https://api.maptiler.com/maps/bright/{z}/{x}/{y}.png?key=6cXWT79EZ3DUJJUOKVgL', {
+                attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+ 
+            }).addTo(map);
+
+            //--------------MARKERS--------------
+            //Kantonsschule Frauenfeld
+            var kantonsschulefrauenfeld = L.marker([47.553698, 8.898659]).addTo(map).on('click', function(e){document.getElementById("box1h1").innerText = "Kantonsschule Frauenfeld"; document.getElementById("box1h3").innerText = "Unsere Schule";});
+            kantonsschulefrauenfeld.bindPopup("<b>Kantonsschule Frauenfeld<b>").openPopup;
+
+            //Arbon Seebad
+            var arbonseebad = L.marker([47.526548, 9.418486]).addTo(map).on('click', function(e){document.getElementById("box1h1").innerText = "Arbon Seebad"; document.getElementById("box1h3").innerText = "Klasse A";});
+            arbonseebad.bindPopup("<b>Seebad Arbon<b> <br> Klasse A").openPopup;
+
+           map.zoomControl.setPosition('bottomright');
+
+
+
+        </script>
+
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
