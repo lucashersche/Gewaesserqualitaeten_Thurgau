@@ -27,14 +27,6 @@
   
 }
 
-h1{
-    padding-top: 50px;
-    text-align: center;
-    font-family: 'Lato', sans-serif;
-    font-style: italic;
-    Font-Size: 46px;
-    
-}
 
 p{
     overflow: hidden;
@@ -42,11 +34,27 @@ p{
     text-align: center;
 }
 
+h1{
+    padding-top: 75px;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-style: italic;
+    Font-Size: 46px;
+    
+}
+
 h3 {
     font-family: 'Catamaran', sans-serif;
     text-align: center;
     Font-Size: 16px;
 }
+
+h4 {
+    font-family: 'Catamaran', sans-serif;
+    text-align: center;
+    Font-Size: 16px;
+}
+
 
 header {
   
@@ -103,3 +111,30 @@ footer {
     width: 42%;
     height: 100%;
 }
+
+
+table {
+    margin: 0 auto;
+    text-align: center;
+    border-collapse: collapse;
+    border: 1px solid #d4d4d4;
+    table-layout:fixed;
+    width:100%;
+  }
+
+  
+  
+  tr:nth-child(even) {
+    background: #d4d4d4;
+  }
+  
+  th, td {
+  
+    padding: 10px 30px;
+  }
+  
+  th {
+    border-bottom: 1px solid #d4d4d4;
+  }
+
+  
