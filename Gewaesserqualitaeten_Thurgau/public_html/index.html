@@ -5,75 +5,142 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html lang="en">
-    <head>
-        <!-- Meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="Gewässerqualitäten Thurgau">
-        <!-- titel -->
-        <title>Gewässerqualitäten Thurgau</title>
-        <!-- links -->
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/> 
-        <!-- Links -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Catamaran&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Lato:400i&display=swap" rel="stylesheet">
 
-    </head>
-    <body>
+<head>
+    <!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Gewässerqualitäten Thurgau">
+    <!-- titel -->
+    <title>Gewässerqualitäten Thurgau</title>
+    <!-- links -->
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+    <!-- Links -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Catamaran&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400i&display=swap" rel="stylesheet">
 
-            <div class="backgroundbox"></div>
-        <div class="box1" id="box1">
-            <h1 id="box1h1"></h1>
-            <h3 id="box1h3"></h3>
-        </div>
-        <div class="box2" id="box2">
+</head>
 
-            </div>
-        <div id ="map"></div>
+<body>
+
+    <div class="backgroundbox"></div>
+    <div class="box1" id="box1">
+        <h1 id="box1h1"></h1>
+        <h3 id="box1h3"></h3>
+        <h4 id="box1h4"></h4>
+    </div>
+    <div class="box2" id="box2" style="overflow-y:scroll;">
+            <table style="width:100%">
+                    <tr>
+                      <th>Erhebungsdatum</th>
+                      <th>Badeplatz</th>
+                      <th>Gewässer</th>
+                      <th>Qualitätsklasse</th>
+                    </tr>
+                    
+                  </table>
+            <script src="https://d3js.org/d3.v4.min.js"></script>
+
+            
+        
+            <script>
+
+                d3.text("data/Badewasserqualitaet_TG_ohne_Koordinaten.csv", function(data) {
+            
+                  var parsedCSV = d3.csvParseRows(data);
+                  var parsedCSV2 = parsedCSV.slice(1, 35);
+                  var container = d3.select("#box2")
+                  .append("table")
+            
+                  .selectAll("tr")
+                  .data(parsedCSV2).enter()
+                  .append("tr")
+            
+                  .selectAll("td")
+                  .data(function(d) { return d; }).enter()
+                  .append("td")
+                  .text(function(d) { return d; });
+            
+                });
+                </script>
+        
+    </div>
+    <div id="map"></div>
+
+
+    <script>
+        //Map Marker Icons
+        var blueIcon = L.icon({
+            iconUrl: 'images/blue.png',
+
+            iconSize: [45, 60], // size of the icon
+            iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
+            shadowAnchor: [30, 44],  // the same for the shadow
+            popupAnchor: [-8, -37]
+        })
+
+        var greenIcon = L.icon({
+            iconUrl: 'images/green.png',
+
+            iconSize: [45, 60], // size of the icon
+            iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
+            shadowAnchor: [30, 44],  // the same for the shadow
+            popupAnchor: [-8, -37]
+        })
+
+        var yellowIcon = L.icon({
+            iconUrl: 'images/yellow.png',
+
+            iconSize: [45, 60], // size of the icon
+            iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
+            shadowAnchor: [30, 44],  // the same for the shadow
+            popupAnchor: [-8, -37]
+        })
+
+        var map = L.map('map').setView([47.553698, 8.898659], 9);
+        L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=6cXWT79EZ3DUJJUOKVgL', {
+            attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+
+        }).addTo(map);
+
+        //--------------MARKERS--------------
+        //Kantonsschule Frauenfeld
+        var kantonsschulefrauenfeld = L.marker([47.553698, 8.898659], {icon: yellowIcon}).addTo(map).on('click', function (e) { document.getElementById("box1h1").innerText = "Kantonsschule Frauenfeld"; document.getElementById("box1h3").innerText = "Unsere Schule"; document.getElementById("box1h4").innerText = "sonstiges";});
+        kantonsschulefrauenfeld.bindPopup("<b>Kantonsschule Frauenfeld<b>").openPopup;
+
+        //Arbon Seebad
+        var arbonseebad = L.marker([47.526548, 9.418486], {icon: blueIcon}).addTo(map).on('click', function (e) { document.getElementById("box1h1").innerText = "Arbon Seebad"; document.getElementById("box1h3").innerText = "Klasse A"; document.getElementById("box1h4").innerText = "Bodensee";});
+        arbonseebad.bindPopup("<b>Seebad Arbon<b>").openPopup;
+
+        map.zoomControl.setPosition('bottomright');
 
 
 
+    </script>
 
 
-        <!-- Hier muss eine Buttongroup mit den verschiedenen Monaten erstellt werden.-->
-
-        <!-- Die Karte muss hier hinzugefügt werden.-->
-
-        <!-- Hier kommt das rechstliche der Website nach der Karte.-->
-
-        <script>
-            var map = L.map('map').setView([47.553698, 8.898659], 9);
-            L.tileLayer('https://api.maptiler.com/maps/bright/{z}/{x}/{y}.png?key=6cXWT79EZ3DUJJUOKVgL', {
-                attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
- 
-            }).addTo(map);
-
-            //--------------MARKERS--------------
-            //Kantonsschule Frauenfeld
-            var kantonsschulefrauenfeld = L.marker([47.553698, 8.898659]).addTo(map).on('click', function(e){document.getElementById("box1h1").innerText = "Kantonsschule Frauenfeld"; document.getElementById("box1h3").innerText = "Unsere Schule";});
-            kantonsschulefrauenfeld.bindPopup("<b>Kantonsschule Frauenfeld<b>").openPopup;
-
-            //Arbon Seebad
-            var arbonseebad = L.marker([47.526548, 9.418486]).addTo(map).on('click', function(e){document.getElementById("box1h1").innerText = "Arbon Seebad"; document.getElementById("box1h3").innerText = "Klasse A";});
-            arbonseebad.bindPopup("<b>Seebad Arbon<b> <br> Klasse A").openPopup;
-
-           map.zoomControl.setPosition('bottomright');
-
-
-
-        </script>
-
-
-        <!-- Optional JavaScript -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
+    <script src="https://rawgit.com/haochi/jquery.googleSuggest/master/jquery.googleSuggest.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"  crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+</body>
+
 </html>
