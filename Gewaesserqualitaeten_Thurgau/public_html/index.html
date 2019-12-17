@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+
 -->
 <html lang="en">
 
@@ -30,6 +28,7 @@ and open the template in the editor.
 
     <body>
 
+        <!-- Ebere, linke Box -->
         <div class="backgroundbox"></div>
         <div class="box1" id="box1">
             <h1 id="box1h1">Badewasserqualität Thurgau Übersicht</h1>
@@ -37,6 +36,7 @@ and open the template in the editor.
             <h4 id="box1h4"></h4>
         </div>
         
+        <!-- Legende -->
         <img src="images/Legende_Wasserqualitaet_zentriertklein.png" id="legende">
 
         <!--
@@ -53,6 +53,7 @@ and open the template in the editor.
         </div>
         -->
 
+        <!-- Dropdown-Auswahlliste mit allen Monaten -->
         <div class="dropdown">
             <button class="dropbtn">Monat</button>
             <div class="dropdown-content">
@@ -65,6 +66,7 @@ and open the template in the editor.
 
 
 
+        <!-- Erstellung Tabelle, unten, links -->
         <div class="box2" id="box2" style="overflow-y:scroll;">
             <table style="width:100%">
                 <tr>
@@ -79,8 +81,8 @@ and open the template in the editor.
 
 
 
+            <!-- Tabelle wird mit Daten gefüllt -->
             <script>
-                console.log("got here");
                 var month = window.localStorage.getItem('month');
                 if (window.localStorage.getItem('month') === null) {
                     window.localStorage.setItem('month', '8')
@@ -122,44 +124,12 @@ and open the template in the editor.
         </div>
         <div id="map"></div>
 
-        <!--
-        <script>
-            //Map Marker Icons
-            
-
-            var map = L.map('map').setView([47.553698, 8.898659], 9);
-            L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=6cXWT79EZ3DUJJUOKVgL', {
-                attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
-
-            }).addTo(map);
-
-            //--------------MARKERS--------------
-            //Kantonsschule Frauenfeld
-            var kantonsschulefrauenfeld = L.marker([47.553698, 8.898659], {icon: yellowIcon}).addTo(map).on('click', function (e) {
-                document.getElementById("box1h1").innerText = "Kantonsschule Frauenfeld";
-                document.getElementById("box1h3").innerText = "Unsere Schule";
-                document.getElementById("box1h4").innerText = "sonstiges";
-            });
-            kantonsschulefrauenfeld.bindPopup("<b>Kantonsschule Frauenfeld<b>").openPopup;
-
-            //Arbon Seebad
-            var arbonseebad = L.marker([47.526548, 9.418486], {icon: blueIcon}).addTo(map).on('click', function (e) {
-                document.getElementById("box1h1").innerText = "Arbon Seebad";
-                document.getElementById("box1h3").innerText = "Klasse A";
-                document.getElementById("box1h4").innerText = "Bodensee";
-            });
-            arbonseebad.bindPopup("<b>Seebad Arbon<b>").openPopup;
-
-            map.zoomControl.setPosition('bottomright');
-
-
-
-        </script>
-        -->
+       <!-- Javascript-Library für die Verwaltung von Daten -->
         <script src="https://d3js.org/d3.v5.min.js"></script>
+        
+        <!-- Erstellung Karte mit Markers -->
         <script>
-
-
+            /*** Markers, Farben  ***/
                 var blueIcon = L.icon({
                     iconUrl: 'images/blue.png',
 
@@ -188,50 +158,22 @@ and open the template in the editor.
                 })
 
 
-
+                /*** Erstellung Karte ***/
                 var map = L.map('map').setView([47.553698, 8.898659], 11);
                 L.tileLayer('https://api.maptiler.com/maps/bright/{z}/{x}/{y}.png?key=6cXWT79EZ3DUJJUOKVgL', {
                     attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
 
                 }).addTo(map);
 
-                //--------------MARKERS--------------
-                //Kantonsschule Frauenfeld
-                /*
-                 var kantonsschulefrauenfeld = L.marker([47.553698, 8.898659]).addTo(map).on('click', function (e) {
-                 document.getElementById("box1h1").innerText = "Kantonsschule Frauenfeld";
-                 document.getElementById("box1h3").innerText = "Unsere Schule";
-                 });
-                 kantonsschulefrauenfeld.bindPopup("<b>Kantonsschule Frauenfeld<b>").openPopup;
-                 
-                 //Arbon Seebad
-                 var arbonseebad = L.marker([47.526548, 9.418486]).addTo(map).on('click', function (e) {
-                 document.getElementById("box1h1").innerText = "Arbon Seebad";
-                 document.getElementById("box1h3").innerText = "Klasse A";
-                 });
-                 arbonseebad.bindPopup("<b>Seebad Arbon<b> <br> Klasse A").openPopup;
-                 
-                 */
-
-
-
+                
+                /*** Daten aus CSV-Datei werden mittels d3 herausgelesen ***/
                 d3.csv("data/Badewasserqualitaet_TG_mit_Koordinaten_alt.csv").then(function (data) {
                     var month = window.localStorage.getItem('month');
                     if (window.localStorage.getItem('month') === null) {
                         window.localStorage.setItem('month', '8')
                     }
 
-                    /* var monthToShow = month - 5;
-                     console.log("month: " + month);
-                     console.log("monthToShow: " + monthToShow);
-                     var monthToShowMin = monthToShow * 35;
-                     if (monthToShowMin === 0) {
-                     monthToShowMin = 1;
-                     }
-                     console.log("monthToShowMin: " + monthToShowMin);
-                     var monthToShowMax = monthToShow * 35 + 35;
-                     console.log("monthToShowMax: " + monthToShowMax);
-                     */
+                   
                     var zaehler = 1;
                     while (zaehler <= 137) {
                         // console.log(data[$zaehler]);
@@ -250,6 +192,7 @@ and open the template in the editor.
                              console.log("hat funktioniert"+ d.PSID);
                              
                              });*/
+                             /** Koordinaten werden herausgelesen ***/
                             console.log("Koordinaten: " + data[zaehler].X + ", " + data[zaehler].Y);
                             $koordinaten = data[zaehler].X + ", " + data[zaehler].Y;
                             $xkoordinate = parseFloat(data[zaehler].X);
@@ -257,6 +200,7 @@ and open the template in the editor.
                             console.log($xkoordinate);
                             console.log($ykoordinate);
 
+                            /** Unterteilung in Klassen ***/
                             if (data[zaehler].QUALITAETSKLASSE === 'A') {
                                 marker = L.marker([$xkoordinate, $ykoordinate], {icon: blueIcon}).addTo(map);
                             }
@@ -266,9 +210,11 @@ and open the template in the editor.
                             if (data[zaehler].QUALITAETSKLASSE === 'C') {
                                 marker = L.marker([$xkoordinate, $ykoordinate], {icon: yellowIcon}).addTo(map);
                             }
-
+                            
+                            /*** Popup wird erstellt ***/
                             marker.bindPopup(data[zaehler].BADEPLATZ).openPopup;
 
+                            /*** Event wenn Marker angeclickt wird, zeigt passende Daten im div, oben links ***/
                             marker.on('click', function (e) {
                                 var popup = e.target.getPopup();
                                 var content = popup.getContent();
@@ -282,6 +228,7 @@ and open the template in the editor.
                                             var contentklasse = data[i].QUALITAETSKLASSE;
                                             var contentgewaesser = data[i].GEWAESSER;
 
+                                            /*** Füllt Textfelder ***/
                                             document.getElementById("box1h1").innerText = content;
                                             document.getElementById("box1h3").innerText = "Klasse " + contentklasse;
                                             document.getElementById("box1h4").innerText = contentgewaesser;
@@ -301,7 +248,8 @@ and open the template in the editor.
 
                     }
                 });
-
+                
+                /*** Zoom-Tool unten rechts ***/
                 map.zoomControl.setPosition('bottomright');
 
 
