@@ -16,7 +16,7 @@ and open the template in the editor.
         <!-- links -->
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+              crossorigin="anonymous">
         <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
         <!-- Links -->
@@ -24,7 +24,7 @@ and open the template in the editor.
         <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Catamaran&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Lato:400i&display=swap" rel="stylesheet">
-         <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
 
     </head>
 
@@ -32,10 +32,39 @@ and open the template in the editor.
 
         <div class="backgroundbox"></div>
         <div class="box1" id="box1">
-            <h1 id="box1h1"></h1>
-            <h3 id="box1h3"></h3>
+            <h1 id="box1h1">Badewasserqualität Thurgau Übersicht</h1>
+            <h3 id="box1h3">Wähle einen Badeplatz aus</h3>
             <h4 id="box1h4"></h4>
         </div>
+        
+        <img src="images/Legende_Wasserqualitaet_zentriertklein.png" id="legende">
+
+        <!--
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Monat
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item " href="#">Mai</a>
+                <a class="dropdown-item" href="#">Juni</a>
+                <a class="dropdown-item" href="#">Juli</a>
+                <a class="dropdown-item" href="#">August</a>
+            </div>
+        </div>
+        -->
+
+        <div class="dropdown">
+            <button class="dropbtn">Monat</button>
+            <div class="dropdown-content">
+                <a href="index.html" onClick="window.localStorage.setItem('month', '5')">Mai</a>
+                <a href="index.html" onClick="window.localStorage.setItem('month', '6')">Juni</a>
+                <a href="index.html" onClick="window.localStorage.setItem('month', '7')">Juli</a>
+                <a href="index.html" onClick="window.localStorage.setItem('month', '8')">August</a>
+            </div>
+        </div>
+
+
+
         <div class="box2" id="box2" style="overflow-y:scroll;">
             <table style="width:100%">
                 <tr>
@@ -46,16 +75,30 @@ and open the template in the editor.
                 </tr>
 
             </table>
-           
+
 
 
 
             <script>
-
+                console.log("got here");
+                var month = window.localStorage.getItem('month');
+                if (window.localStorage.getItem('month') === null) {
+                    window.localStorage.setItem('month', '8')
+                }
                 d3.text("data/Badewasserqualitaet_TG_ohne_Koordinaten.csv", function (data) {
-
+                    console.log("in here");
                     var parsedCSV = d3.csvParseRows(data);
-                    var parsedCSV2 = parsedCSV.slice(1, 35);
+                    var monthToShow = month - 5;
+                    console.log("month: " + month);
+                    console.log("monthToShow: " + monthToShow);
+                    var monthToShowMin = monthToShow * 35;
+                    if (monthToShowMin === 0) {
+                        monthToShowMin = 1;
+                    }
+                    console.log("monthToShowMin: " + monthToShowMin);
+                    var monthToShowMax = monthToShow * 35 + 35;
+                    console.log("monthToShowMax: " + monthToShowMax);
+                    var parsedCSV2 = parsedCSV.slice(monthToShowMin, monthToShowMax);
                     var container = d3.select("#box2")
                             .append("table")
 
@@ -73,6 +116,7 @@ and open the template in the editor.
                             });
 
                 });
+
             </script>
 
         </div>
@@ -112,93 +156,153 @@ and open the template in the editor.
 
         </script>
         -->
-                            <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
         <script>
- 
-
-            var blueIcon = L.icon({
-                iconUrl: 'images/blue.png',
-
-                iconSize: [45, 60], // size of the icon
-                iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
-                shadowAnchor: [30, 44], // the same for the shadow
-                popupAnchor: [-8, -37]
-            })
-
-            var greenIcon = L.icon({
-                iconUrl: 'images/green.png',
-
-                iconSize: [45, 60], // size of the icon
-                iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
-                shadowAnchor: [30, 44], // the same for the shadow
-                popupAnchor: [-8, -37]
-            })
-
-            var yellowIcon = L.icon({
-                iconUrl: 'images/yellow.png',
-
-                iconSize: [45, 60], // size of the icon
-                iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
-                shadowAnchor: [30, 44], // the same for the shadow
-                popupAnchor: [-8, -37]
-            })
 
 
+                var blueIcon = L.icon({
+                    iconUrl: 'images/blue.png',
 
-            var map = L.map('map').setView([47.553698, 8.898659], 9);
-            L.tileLayer('https://api.maptiler.com/maps/bright/{z}/{x}/{y}.png?key=6cXWT79EZ3DUJJUOKVgL', {
-                attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+                    iconSize: [45, 60], // size of the icon
+                    iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [30, 44], // the same for the shadow
+                    popupAnchor: [-8, -37]
+                })
 
-            }).addTo(map);
+                var greenIcon = L.icon({
+                    iconUrl: 'images/green.png',
 
-            //--------------MARKERS--------------
-            //Kantonsschule Frauenfeld
-            /*
-            var kantonsschulefrauenfeld = L.marker([47.553698, 8.898659]).addTo(map).on('click', function (e) {
-                document.getElementById("box1h1").innerText = "Kantonsschule Frauenfeld";
-                document.getElementById("box1h3").innerText = "Unsere Schule";
-            });
-            kantonsschulefrauenfeld.bindPopup("<b>Kantonsschule Frauenfeld<b>").openPopup;
+                    iconSize: [45, 60], // size of the icon
+                    iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [30, 44], // the same for the shadow
+                    popupAnchor: [-8, -37]
+                })
 
-            //Arbon Seebad
-            var arbonseebad = L.marker([47.526548, 9.418486]).addTo(map).on('click', function (e) {
-                document.getElementById("box1h1").innerText = "Arbon Seebad";
-                document.getElementById("box1h3").innerText = "Klasse A";
-            });
-            arbonseebad.bindPopup("<b>Seebad Arbon<b> <br> Klasse A").openPopup;
+                var yellowIcon = L.icon({
+                    iconUrl: 'images/yellow.png',
 
-            */
+                    iconSize: [45, 60], // size of the icon
+                    iconAnchor: [30, 44], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [30, 44], // the same for the shadow
+                    popupAnchor: [-8, -37]
+                })
 
 
 
-            d3.csv("data/Badewasserqualitaet_TG_mit_Koordinaten_alt.csv").then(function (data) {
-                var zaehler = 0;
-                while (zaehler <= 25) {
-                    // console.log(data[$zaehler]);
+                var map = L.map('map').setView([47.553698, 8.898659], 11);
+                L.tileLayer('https://api.maptiler.com/maps/bright/{z}/{x}/{y}.png?key=6cXWT79EZ3DUJJUOKVgL', {
+                    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
 
-                    console.log("Der Badeplatz " + data[zaehler].BADEPLATZ + " hat eine Wasserqualität von: " + data[zaehler].QUALITAETSKLASSE);
-                    $name = String(data[zaehler].BADEPLATZ);
-                    console.log("Name: " + $name);
-                    /* data.forEach(function (d) {
-                     
-                     console.log("hat funktioniert"+ d.PSID);
-                     
-                     });*/
-                    console.log("Koordinaten: " + data[zaehler].X + ", " + data[zaehler].Y);
-                    $koordinaten = data[zaehler].X + ", " + data[zaehler].Y;
-                    $xkoordinate = parseInt(data[zaehler].X);
-                    $ykoordinate = parseInt(data[zaehler].Y);
-                    marker = L.marker([$xkoordinate, $ykoordinate]).addTo(map).on('click', function (e) {
-                        document.getElementById("box1h1").innerText = data[zaehler].BADEPLATZ;
-                        document.getElementById("box1h3").innerText = "Klasse " + data[zaehler].QUALITAETSKLASSE;
-                    });
-                    marker.bindPopup("<b>" + data[zaehler].BADEPLATZ + "<b> <br> Klasse " + data[zaehler].QUALITAETSKLASSE).openPopup;
-                    zaehler++;
-                }
+                }).addTo(map);
 
-            });
+                //--------------MARKERS--------------
+                //Kantonsschule Frauenfeld
+                /*
+                 var kantonsschulefrauenfeld = L.marker([47.553698, 8.898659]).addTo(map).on('click', function (e) {
+                 document.getElementById("box1h1").innerText = "Kantonsschule Frauenfeld";
+                 document.getElementById("box1h3").innerText = "Unsere Schule";
+                 });
+                 kantonsschulefrauenfeld.bindPopup("<b>Kantonsschule Frauenfeld<b>").openPopup;
+                 
+                 //Arbon Seebad
+                 var arbonseebad = L.marker([47.526548, 9.418486]).addTo(map).on('click', function (e) {
+                 document.getElementById("box1h1").innerText = "Arbon Seebad";
+                 document.getElementById("box1h3").innerText = "Klasse A";
+                 });
+                 arbonseebad.bindPopup("<b>Seebad Arbon<b> <br> Klasse A").openPopup;
+                 
+                 */
 
-            map.zoomControl.setPosition('bottomright');
+
+
+                d3.csv("data/Badewasserqualitaet_TG_mit_Koordinaten_alt.csv").then(function (data) {
+                    var month = window.localStorage.getItem('month');
+                    if (window.localStorage.getItem('month') === null) {
+                        window.localStorage.setItem('month', '8')
+                    }
+
+                    /* var monthToShow = month - 5;
+                     console.log("month: " + month);
+                     console.log("monthToShow: " + monthToShow);
+                     var monthToShowMin = monthToShow * 35;
+                     if (monthToShowMin === 0) {
+                     monthToShowMin = 1;
+                     }
+                     console.log("monthToShowMin: " + monthToShowMin);
+                     var monthToShowMax = monthToShow * 35 + 35;
+                     console.log("monthToShowMax: " + monthToShowMax);
+                     */
+                    var zaehler = 1;
+                    while (zaehler <= 137) {
+                        // console.log(data[$zaehler]);
+
+                        var datum = data[zaehler].ERHEBUNGDATUM;
+                        var zeichen = datum.charAt(4);
+                        console.log("zeichen: " + zeichen)
+                        if (zeichen === month) {
+
+
+                            console.log("Der Badeplatz " + data[zaehler].BADEPLATZ + " hat eine Wasserqualität von: " + data[zaehler].QUALITAETSKLASSE);
+                            $name = String(data[zaehler].BADEPLATZ);
+                            console.log("Name: " + $name);
+                            /* data.forEach(function (d) {
+                             
+                             console.log("hat funktioniert"+ d.PSID);
+                             
+                             });*/
+                            console.log("Koordinaten: " + data[zaehler].X + ", " + data[zaehler].Y);
+                            $koordinaten = data[zaehler].X + ", " + data[zaehler].Y;
+                            $xkoordinate = parseFloat(data[zaehler].X);
+                            $ykoordinate = parseFloat(data[zaehler].Y);
+                            console.log($xkoordinate);
+                            console.log($ykoordinate);
+
+                            if (data[zaehler].QUALITAETSKLASSE === 'A') {
+                                marker = L.marker([$xkoordinate, $ykoordinate], {icon: blueIcon}).addTo(map);
+                            }
+                            if (data[zaehler].QUALITAETSKLASSE === 'B') {
+                                marker = L.marker([$xkoordinate, $ykoordinate], {icon: greenIcon}).addTo(map);
+                            }
+                            if (data[zaehler].QUALITAETSKLASSE === 'C') {
+                                marker = L.marker([$xkoordinate, $ykoordinate], {icon: yellowIcon}).addTo(map);
+                            }
+
+                            marker.bindPopup(data[zaehler].BADEPLATZ).openPopup;
+
+                            marker.on('click', function (e) {
+                                var popup = e.target.getPopup();
+                                var content = popup.getContent();
+
+                                console.log("Content: " + content);
+                                for (var i = 1; i <= 137; i++) {
+                                    var datum2 = data[i].ERHEBUNGDATUM;
+                                    var zeichen2 = datum2.charAt(4);
+                                    if (zeichen2 === month) {
+                                        if (data[i].BADEPLATZ === content) {
+                                            var contentklasse = data[i].QUALITAETSKLASSE;
+                                            var contentgewaesser = data[i].GEWAESSER;
+
+                                            document.getElementById("box1h1").innerText = content;
+                                            document.getElementById("box1h3").innerText = "Klasse " + contentklasse;
+                                            document.getElementById("box1h4").innerText = contentgewaesser;
+                                        }
+
+
+                                    }
+
+
+                                }
+
+
+
+                            });
+                        }
+                        zaehler++;
+
+                    }
+                });
+
+                map.zoomControl.setPosition('bottomright');
 
 
         </script>
